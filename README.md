@@ -82,48 +82,6 @@ python train_grpo.py
    - Merge the adapter weights into the model.
    - Save the final, merged model in 16-bit precision (`float16` or `bfloat16`) to `{output_model_base_path}-merged`.
 
-## Hyperparameters for Reproducibility
-
-The following tables detail the exact settings used in the script to ensure that the training run is reproducible. Below parameters are those used in the initial training phase. A few elements may differ in training scripts used in later steps. 
-
-### LoRA Configuration
-| Parameter | Value | Description |
-| :--- | :--- | :--- |
-| `target_modules` | `['q_proj', 'k_proj', 'v_proj', 'o_proj', 'gate_proj', 'up_proj', 'down_proj', 'embed_tokens', 'lm_head']` | Layers to apply LoRA to. |
-| `r` (Rank) | `512` | The rank of the LoRA matrices. |
-| `lora_alpha` | `24` | LoRA scaling factor. |
-| `lora_dropout` | `0` | Dropout probability for LoRA layers. |
-| `bias` | `"none"` | Bias type for LoRA. |
-| `use_rslora` | `True` | Use Rank-Stabilized LoRA. |
-| `random_state` | `42` | Seed for LoRA initialization. |
-
-### Training Arguments
-| Parameter | Value | Description |
-| :--- | :--- | :--- |
-| `per_device_train_batch_size` | `4` | Batch size per GPU. |
-| `gradient_accumulation_steps` | `2` | Number of steps to accumulate gradients. |
-| `num_train_epochs` | `1` | Total number of training epochs. |
-| `learning_rate` | `1e-4` | The main learning rate for model weights. |
-| `embedding_learning_rate` | `1e-5` | A separate, lower LR for token embeddings. |
-| `lr_scheduler_type` | `cosine` | Learning rate scheduler type. |
-| `warmup_ratio` | `0.25` | Proportion of training steps for warmup. |
-| `optim` | `adamw_8bit` | 8-bit AdamW optimizer for memory efficiency. |
-| `weight_decay` | `0.00` | Weight decay value. |
-| `max_seq_length` | `1536` | Maximum sequence length for the model. |
-| `precision` | `bf16` / `fp16` | Automatically determined by `is_bfloat16_supported()`. |
-| `seed` | `42` | Global seed for reproducibility. |
-
-### Data Loading & Augmentation
-| Parameter | Value | Description |
-| :--- | :--- | :--- |
-| `n` (dataset samples) | Number of base problems to load from ARC dataset. |
-| `sizes` (grid sizes) | `[6]` | Filter problems by specific grid sizes. |
-| `seed` (dataset seed) | `42` | Seed for dataset sampling. |
-| `tp` (augmentation) | `'all'` | Apply all transpose augmentations. |
-| `rt` (augmentation) | `'all'` | Apply all rotation augmentations. |
-| `perm` (augmentation) | `True` | Apply color permutations. |
-| `shfl_ex` (augmentation) | `True` | Shuffle examples within a prompt. |
-
 ## Final Output
 
 Upon successful completion (all three scripts), the script will produce two main artifacts in your specified output directory:
